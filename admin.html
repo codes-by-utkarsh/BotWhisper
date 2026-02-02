@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Eco-Secure Store</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script>
+        fetch('/api/flag')
+            .then(res => res.json())
+            .then(data => {
+                const el = document.getElementById('flag-content');
+                if (data.success) {
+                    el.textContent = data.flag;
+                } else {
+                    el.textContent = 'ACCESS DENIED: ' + data.message;
+                    el.style.background = 'linear-gradient(135deg, #fc8181 0%, #f56565 100%)';
+                    el.style.color = '#fff';
+                }
+            })
+            .catch(err => console.error(err));
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>🔒 Admin Dashboard</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div class="card">
+            <h2>System Status</h2>
+            <p class="info-text">Welcome, Administrator. All systems operational.</p>
+            <div class="ticket-display">
+                <h3 style="margin: 0 0 15px 0; color: #e53e3e;">🚨 Classification: TOP SECRET</h3>
+                <p><strong>CTF Flag:</strong></p>
+                <p><span id="flag-content">Loading...</span></p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
