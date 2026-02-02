@@ -1,3 +1,4 @@
+require('dotenv').config();
 const puppeteer = require('puppeteer');
 
 const args = process.argv.slice(2);
@@ -29,7 +30,7 @@ if (!ticketId) {
 
         await page.setCookie({
             name: 'session_id',
-            value: 'Sup3rS3cr3tAdm1nC00k1e_DoNotShare',
+            value: process.env.ADMIN_COOKIE,
             domain: 'localhost',
             path: '/',
             httpOnly: false,
