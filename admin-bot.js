@@ -35,7 +35,7 @@ if (!ticketId) {
     try {
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 10000 });
         console.log('[Bot] Page loaded');
-        await page.waitForTimeout(3000);
+        await new Promise(resolve => setTimeout(resolve, 3000));
     } catch (err) {
         console.error(`[Bot] Error: ${err.message}`);
     }
