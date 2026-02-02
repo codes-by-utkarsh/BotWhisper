@@ -12,8 +12,7 @@ RUN npm ci --only=production && \
 
 COPY --chown=ctfuser:ctfuser . .
 
-RUN chmod -R 755 /app && \
-    chmod 644 /app/.env
+RUN chmod -R 755 /app
 
 USER ctfuser
 
