@@ -21,20 +21,27 @@ if (!ticketId) {
 
     const page = await browser.newPage();
 
-    await page.setCookie({
-        name: 'session_id',
-        value: 'Sup3rS3cr3tAdm1nC00k1e_DoNotShare',
-        domain: 'localhost',
-        path: '/',
-        httpOnly: false
-    });
-
     const url = `http://localhost:3000/ticket-view/${ticketId}`;
     console.log(`[Bot] Visiting ${url}`);
 
     try {
+        await page.goto('http://localhost:3000/', { waitUntil: 'domcontentloaded' });
+
+        await page.setCookie({
+            name: 'session_id',
+            value: 'Sup3rS3cr3tAdm1nC00k1e_DoNotShare',
+            domain: 'localhost',
+            path: '/',
+            httpOnly: false,
+            sameSite: 'Lax'
+        });
+
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 10000 });
         console.log('[Bot] Page loaded');
+
+        const cookies = await page.cookies();
+        console.log('[Bot] Cookies:', cookies.map(c => `${c.name}=${c.value}`).join('; '));
+
         await new Promise(resolve => setTimeout(resolve, 3000));
     } catch (err) {
         console.error(`[Bot] Error: ${err.message}`);
