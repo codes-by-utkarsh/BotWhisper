@@ -15,12 +15,33 @@
     <header>
         <div class="container">
             <h1>🌿 Eco-Secure Store</h1>
-            <nav ng-if="user.loggedIn">
+            <nav ng-if="user.loggedIn" id="main-nav">
                 <a class="nav-link" ng-click="setView('shop')">Shop</a>
                 <a class="nav-link" ng-click="setView('ticket')">Support</a>
             </nav>
         </div>
     </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cookies = document.cookie.split(';');
+            const hasSessionId = cookies.some(cookie => cookie.trim().startsWith('session_id='));
+
+            if (hasSessionId) {
+                const checkNav = setInterval(function () {
+                    const nav = document.getElementById('main-nav');
+                    if (nav) {
+                        clearInterval(checkNav);
+                        const adminLink = document.createElement('a');
+                        adminLink.className = 'nav-link';
+                        adminLink.href = '/admin';
+                        adminLink.textContent = 'Admin Dashboard';
+                        nav.appendChild(adminLink);
+                    }
+                }, 100);
+            }
+        });
+    </script>
 
     <div class="container">
 

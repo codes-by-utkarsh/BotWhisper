@@ -76,11 +76,27 @@ app.get('/ticket-view/:id', (req, res) => {
         <header>
             <div class="container">
                 <h1>🌿 Eco-Secure Store</h1>
-                <nav>
+                <nav id="main-nav">
                     <a class="nav-link" href="/">Home</a>
                 </nav>
             </div>
         </header>
+
+        <script>
+            (function() {
+                const cookies = document.cookie.split(';');
+                const hasSessionId = cookies.some(cookie => cookie.trim().startsWith('session_id='));
+                
+                if (hasSessionId) {
+                    const nav = document.getElementById('main-nav');
+                    const adminLink = document.createElement('a');
+                    adminLink.className = 'nav-link';
+                    adminLink.href = '/admin';
+                    adminLink.textContent = 'Admin Dashboard';
+                    nav.appendChild(adminLink);
+                }
+            })();
+        </script>
 
         <div class="container">
             <div class="card">
