@@ -24,9 +24,6 @@ app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     if (username === process.env.GUEST_USERNAME && password === process.env.GUEST_PASSWORD) {
         res.json({ success: true, role: 'guest' });
-    } else if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-        res.cookie('session_id', ADMIN_COOKIE_VAL, { httpOnly: false });
-        res.json({ success: true, role: 'admin' });
     } else {
         res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
