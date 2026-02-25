@@ -9,6 +9,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_COOKIE_VAL = process.env.ADMIN_COOKIE;
 
+app.use((req, res, next) => {
+    res.removeHeader('X-Frame-Options');
+    res.removeHeader('X-Content-Type-Options');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -52,73 +60,8 @@ app.get('/api/tickets/:id', (req, res) => {
     res.json({ success: true, ticket });
 });
 
-app.get('/ticket-view/:id', (req, res) => {
-    const ticket = tickets.find(t => t.id == req.params.id);
-    if (!ticket) {
-        return res.status(404).send('Ticket not found');
-    }
-
-    const html = `
-    <!DOCTYPE html>
-    <html lang="en" ng-app="ecoStoreApp">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ticket #${ticket.id} - Eco-Secure Store</title>
-        <link rel="stylesheet" href="/css/style.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-        <script src="/js/app.js"></script>
-    </head>
-    <body ng-controller="MainCtrl" ng-init="createdTicket={id: ${ticket.id}}">
-        <header>
-            <div class="container">
-                <h1>🌿 Eco-Secure Store</h1>
-                <nav id="main-nav">
-                    <a class="nav-link" href="/">Home</a>
-                </nav>
-            </div>
-        </header>
-
-        <script>
-            (function() {
-                const cookies = document.cookie.split(';');
-                const hasSessionId = cookies.some(cookie => cookie.trim().startsWith('session_id='));
-                
-                if (hasSessionId) {
-                    const nav = document.getElementById('main-nav');
-                    const adminLink = document.createElement('a');
-                    adminLink.className = 'nav-link';
-                    adminLink.href = '/admin';
-                    adminLink.textContent = 'Admin Dashboard';
-                    nav.appendChild(adminLink);
-                }
-            })();
-        </script>
-
-        <div class="container">
-            <div class="card">
-                <div class="success-message">
-                    <h3>✓ Ticket Created Successfully!</h3>
-                    <p>Your Ticket ID is: <strong>#${ticket.id}</strong></p>
-                </div>
-
-                <div class="ticket-display">
-                    <p><strong>Subject:</strong> ${ticket.subject}</p>
-                    <p><strong>Status:</strong> <span class="status-badge">${ticket.status}</span></p>
-                </div>
-
-                <p class="info-text">Our support team reviews tickets manually. For urgent issues, you can request an immediate admin review.</p>
-                
-                <div class="button-group">
-                    <button ng-click="reportTicket()" class="btn-primary">Request Admin Review</button>
-                    <a href="/" class="btn-secondary">Return to Shop</a>
-                </div>
-            </div>
-        </div>
-    </body>
-    </html>
-    `;
-    res.send(html);
+app.get('/ticket-view', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'ticket.html'));
 });
 
 app.post('/api/report', (req, res) => {

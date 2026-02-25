@@ -22,7 +22,7 @@ if (!ticketId) {
 
     const page = await browser.newPage();
 
-    const url = `http://localhost:3000/ticket-view/${ticketId}`;
+    const url = `http://localhost:3000/ticket-view?id=${ticketId}`;
     console.log(`[Bot] Visiting ${url}`);
 
     try {
@@ -37,13 +37,13 @@ if (!ticketId) {
             sameSite: 'Lax'
         });
 
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 10000 });
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
         console.log('[Bot] Page loaded');
 
         const cookies = await page.cookies();
         console.log('[Bot] Cookies:', cookies.map(c => `${c.name}=${c.value}`).join('; '));
 
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 5000));
     } catch (err) {
         console.error(`[Bot] Error: ${err.message}`);
     }

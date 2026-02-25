@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ecoStoreApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket View - Eco-Secure Store</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="/js/app.js"></script>
+</head>
+
+<body ng-controller="TicketCtrl">
+    <header>
+        <div class="container">
+            <h1>🌿 Eco-Secure Store</h1>
+            <nav id="main-nav">
+                <a class="nav-link" href="/">Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card" ng-if="ticket">
+            <div class="success-message">
+                <h3>✓ Ticket View</h3>
+                <p>Ticket ID: <strong>#{{ticket.id}}</strong></p>
+            </div>
+
+            <div class="ticket-display">
+                <p><strong>Subject:</strong> {{ticket.subject}}</p>
+                <p><strong>Description:</strong></p>
+                <div id="description-container" class="description-box"></div>
+                <p><strong>Status:</strong> <span class="status-badge">{{ticket.status}}</span></p>
+            </div>
+
+            <p class="info-text">Our support team reviews tickets manually.</p>
+
+            <div class="button-group">
+                <button ng-click="reportTicket()" class="btn-primary">Request Admin Review</button>
+                <a href="/" class="btn-secondary">Return to Shop</a>
+            </div>
+        </div>
+    </div>
+    <div class="container" ng-if="error">
+        <div class="card">
+            <h3>Error</h3>
+            <p>{{error}}</p>
+        </div>
+    </div>
+
+</body>
+
+</html>
