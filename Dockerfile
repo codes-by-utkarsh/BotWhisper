@@ -1,18 +1,18 @@
-FROM node:20-alpine
+FROM node:20-slim
 
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     chromium \
-    nss \
-    freetype \
-    harfbuzz \
+    fonts-freefont-ttf \
     ca-certificates \
-    ttf-freefont
+    --no-install-recommends \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-RUN addgroup -g 1001 ctfuser && \
-    adduser -D -u 1001 -G ctfuser ctfuser
+RUN groupadd -g 1001 ctfuser && \
+    useradd -u 1001 -g ctfuser -m ctfuser
 
 WORKDIR /app
 
@@ -30,6 +30,6 @@ USER ctfuser
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+    CMD node -e "require('http').get('http://localhost:3000', (r) =>{process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 CMD ["node", "server.js"]
